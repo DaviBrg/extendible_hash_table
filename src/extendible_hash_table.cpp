@@ -17,7 +17,7 @@ ExtendibleHashTable::Page::Page(size_t size):
 ExtendibleHashTable::ExtendibleHashTable(size_t page_size/* = 4*/):
     directory_(kInitialDirSize, std::make_shared<Page>(page_size)),
     global_depth_(kInitialGlobalDepth),
-    depth_mask_() {}
+    depth_mask_(kInitialDepthMask) {}
 
 void ExtendibleHashTable::IncrementGlobalDepth() {
     global_depth_++;
@@ -28,7 +28,11 @@ ExtendibleHashTable::Bucket *ExtendibleHashTable::Find(const HashableData &key) 
     std::shared_ptr<Page> page = directory_[key.HashValue() & depth_mask_];
     auto it = std::find_if(std::begin(page->buckets), std::end(page->buckets),
                            [&](const Bucket &b){
-        return (*(b.key) == key);
+        if (b.key) {
+            return (*(b.key) == key);
+        } else {
+            return false;
+        }
     });
     return (it != std::end(page->buckets)) ? &(*it) : nullptr;
 }
@@ -40,19 +44,17 @@ void ExtendibleHashTable::Insert(const HashableData &key, const StoredData &valu
         return (b.key == nullptr);
     });
     if (it != std::end(page->buckets)) {
-        it->key = MakeUniqueDataCopy(key);
-        it->value = MakeUniqueDataCopy(value);
+        it->key = MakeUniqueHashableDataCopy(key);
+        it->value = MakeUniqueStoredDataCopy(value);
     } else {
         std::abort();
     }
 }
 
-
-
 std::shared_ptr<StoredData> ExtendibleHashTable::Get(const HashableData &key) const {
     Bucket *bucket = Find(key);
     if (bucket) {
-        return MakeSharedDataCopy(*(bucket->value));
+        return MakeSharedStoredDataCopy(*(bucket->value));
     } else {
         return nullptr;
     }
@@ -61,10 +63,8 @@ std::shared_ptr<StoredData> ExtendibleHashTable::Get(const HashableData &key) co
 void ExtendibleHashTable::Set(const HashableData &key, const StoredData &value) {
     Bucket *bucket = Find(key);
     if (bucket) {
-        bucket->value = MakeUniqueDataCopy(value);
+        bucket->value = MakeUniqueStoredDataCopy(value);
     } else {
         Insert(key, value);
     }
 }
-
-

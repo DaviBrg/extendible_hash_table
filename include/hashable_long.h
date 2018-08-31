@@ -10,6 +10,7 @@ public:
     ~HashableLong() {}
     size_t HashValue() const { return value_;}
     HashableType type() const { return HashableType::Long();}
+    long int value() const {return value_;}
     bool operator==(const StoredData &other) const;
 private:
     long int value_;

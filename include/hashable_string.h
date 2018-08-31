@@ -13,6 +13,7 @@ public:
 
     HashableType type() const {return HashableType::String();}
     size_t HashValue() const {return hash_value_;}
+    std::string value() const {return value_;}
     bool operator==(const StoredData &other) const;
 private:
     static size_t CalculateHashValue(const std::string &str) ;
