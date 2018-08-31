@@ -11,8 +11,8 @@
 class ExtendibleHashTable {
 private:
     struct Bucket {
-        std::unique_ptr<HashableData*> key;
-        std::unique_ptr<StoredData*> value;
+        std::unique_ptr<HashableData> key;
+        std::unique_ptr<StoredData> value;
     };
 
     struct Page {
@@ -23,7 +23,8 @@ private:
     using Directory = std::vector<std::shared_ptr<Page>>;
 
     void IncrementGlobalDepth();
-    Bucket& Find(HashableData* key) const;
+    Bucket* Find(const HashableData &key) const;
+    void Insert(const HashableData &key, const StoredData &value);
 
     Directory directory_;
     size_t global_depth_;
@@ -32,8 +33,8 @@ private:
 public:
     ExtendibleHashTable(size_t page_size = 4);
 
-    std::shared_ptr<StoredData> Get(HashableData* key) const ;
-    void Set(HashableData* key, StoredData* value);
+    std::shared_ptr<StoredData> Get(const HashableData &key) const ;
+    void Set(const HashableData &key, const StoredData &value);
 
 
 };

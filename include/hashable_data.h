@@ -10,7 +10,7 @@ public:
     HashableData() {}
     virtual ~HashableData() {}
     virtual size_t HashValue() const = 0;
-    virtual bool HasEqualData(HashableData *other) const = 0;
+    virtual bool operator==(const StoredData &other) const = 0;
 };
 
 #endif // HASHABLE_DATA_H

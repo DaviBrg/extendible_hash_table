@@ -10,7 +10,7 @@ public:
     ~HashableDouble() {}
     size_t HashValue() const { return static_cast<size_t>(value_);}
     HashableType type() const { return HashableType::Double();}
-    bool HasEqualData(HashableData *other);
+    bool operator==(const StoredData &other) const;
 private:
     double value_;
 };

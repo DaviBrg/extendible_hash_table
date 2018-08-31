@@ -8,17 +8,17 @@
 
 class HashableString : public HashableData {
 public:
-    HashableString(const std::string &value);
-    HashableString(std::string &&value);
+    HashableString(std::string value);
     ~HashableString() {}
 
     HashableType type() const {return HashableType::String();}
     size_t HashValue() const {return hash_value_;}
-    bool HasEqualData(HashableData *other) const;
+    bool operator==(const StoredData &other) const;
 private:
     static size_t CalculateHashValue(const std::string &str) ;
-    size_t hash_value_ = 0;
     std::string value_;
+    size_t hash_value_;
+
 };
 
 #endif // HASHABLE_STRING_H

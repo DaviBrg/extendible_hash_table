@@ -1,19 +1,15 @@
 #include "hashable_string.h"
 
-HashableString::HashableString(const std::string &value):
-    value_(value),
-    hash_value_(CalculateHashValue(value)) {}
-
-HashableString::HashableString(std::string &&value):
+HashableString::HashableString(std::string value):
     value_(std::move(value)),
-    hash_value_(CalculateHashValue(value)) {}
+    hash_value_(CalculateHashValue(value_)) {}
 
-bool HashableString::HasEqualData(HashableData *other) const {
-    if (other->type() != HashableType::String()) {
+bool HashableString::operator==(const StoredData &other) const {
+    if (other.type() != HashableType::String()) {
         return false;
     }
-    auto hs = static_cast<HashableString*>(other);
-    return (hs->value_ == value_);
+    auto &hs = static_cast<const HashableString&>(other);
+    return (hs.value_ == value_);
 }
 
 size_t HashableString::CalculateHashValue(const std::string &str) {

@@ -3,10 +3,10 @@
 HashableLong::HashableLong(long value):
     value_(value) {}
 
-bool HashableLong::HasEqualData(HashableData *other) const {
-    if (other->type() != HashableType::Long()) {
+bool HashableLong::operator==(const StoredData &other) const {
+    if (other.type() != HashableType::Long()) {
         return false;
     }
-    auto hl = static_cast<HashableLong*>(other);
-    return (hl->value_ == value_);
+    auto &hl = static_cast<const HashableLong&>(other);
+    return (hl.value_ == value_);
 }

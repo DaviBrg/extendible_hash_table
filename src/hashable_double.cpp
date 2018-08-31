@@ -3,10 +3,10 @@
 HashableDouble::HashableDouble(double value):
     value_(value) {}
 
-bool HashableDouble::HasEqualData(HashableData *other) {
-    if (other->type() != HashableType::Double()) {
+bool HashableDouble::operator==(const StoredData &other) const {
+    if (other.type() != HashableType::Double()) {
         return false;
     }
-    auto hd = static_cast<HashableDouble*>(other);
-    return (hd->value_ == value_);
+    auto &hd = static_cast<const HashableDouble&>(other);
+    return (hd.value_ == value_);
 }

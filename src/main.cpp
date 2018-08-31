@@ -5,6 +5,5 @@ using namespace std;
 
 int main() {
     ExtendibleHashTable ht;
-    ht.Set(nullptr, nullptr);
     return 0;
 }
